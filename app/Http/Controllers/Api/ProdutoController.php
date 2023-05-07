@@ -16,16 +16,41 @@ class ProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Carrega as tabelas adicionais
-        $produto = Produto::with('categoria', 'marca')->get();
+        $input = $request->input('pagina');
 
-        return response() -> json([
-            'status' => 200,
-            'mensagem' => 'Lista de produtos retornada',
-            'produtos' => ProdutoResource::collection($produto)
-        ], 200);
+        $query = Produto::with('categoria', 'marca');
+        if ($input) {
+            $page = $input;
+            $perPage = 10;
+            $query->offset(($page - 1) * $perPage)->linit($perPage);
+            $produtos = $query->get();
+
+            $recordsTotal = Produto::count();
+            $numberOfPages = ceil($recordsTotal / $perPage);
+            $response = response()->json([
+                'status' => 200,
+                'mensagem' => 'Lista de produtos retornada',
+                'produtos' => ProdutoResource::collection($produtos),
+                'meta' => [
+                    'total numero de registros' => (string) $recordsTotal,
+                    'numero de registros por pagina' => (string) $perPage,
+                    'numero de paginas' => (string) $numberOfPages,
+                    'pagina atual' => $page
+                ]
+            ], 200);
+        } else {
+            $produtos = $query->get();
+
+            $response = response()->json([
+                'status' => 200,
+                'mensagem' => 'Lista de produtos retornada',
+                'produtos' => ProdutoResource::collection($produtos)
+            ], 200);
+        }
+
+        return $response;
     }
 
     /**
@@ -37,7 +62,7 @@ class ProdutoController extends Controller
     public function store(StoreProdutoRequest $request)
     {
         // Cria o objeto 
-        $produto =new Produto();
+        $produto = new Produto();
 
         // Transfere os valores
         $produto->nomedoproduto = $request->nome_do_produto;
@@ -46,12 +71,12 @@ class ProdutoController extends Controller
         //TODO: ha um jeito melhor de armazenar o ID?
         $produto->fkmarca = $request->marca['id'];
         $produto->fkcategoria = $request->categoria['id'];
-        
+
         // Salva
         $produto->save();
-        
+
         // Retorna o resultado
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Produto armazenado',
             'produto' => new ProdutoResource($produto)
@@ -68,12 +93,11 @@ class ProdutoController extends Controller
     {
         $produto = Produto::with('categoria', 'marca')->find($produto->pkproduto);
 
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Produto retornado',
             'produto' => new ProdutoResource($produto)
         ], 200);
-
     }
 
     /**
@@ -92,12 +116,12 @@ class ProdutoController extends Controller
         //TODO: ha um jeito melhor de armazenar o ID?
         $produto->fkmarca = $request->marca['id'];
         $produto->fkcategoria = $request->categoria['id'];
-        
+
         // Salva
         $produto->update();
-        
+
         // Retorna o resultado
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Produto atualizado'
         ], 200);
@@ -112,7 +136,7 @@ class ProdutoController extends Controller
     public function destroy(Produto $produto)
     {
         $produto->delete();
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Produto apagado'
         ], 200);

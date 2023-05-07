@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoriaRequest;
 use App\Http\Resources\CategoriaResource;
 use App\Models\Categoria;
+use Illuminate\Support\Str;
 
 class CategoriaController extends Controller
 {
@@ -16,17 +17,26 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $categorias = Categoria::all();
+    public function index(Request $request)
+    { {
+            // Captura a coluna para ordenacao
+            $sortParameter = $request->input('ordenacao', 'nome_da_categoria');
+            $sortDirection = Str::startsWith($sortParameter, '-') ? 'desc' : 'asc';
+            $sortColumn = ltrim($sortParameter, '-');
 
-        return response() -> json([
-            'status' => 200,
-            'mensagem' => 'Lista de categorias retornada',
-            'categorias' => CategoriaResource::collection($categorias)
-        ], 200);
+            // Determina se faz a query ordenada ou aplica o default
+            if ($sortColumn == 'nome_da_categoria') {
+                $categorias = Categoria::orderBy('nomedacategoria', $sortDirection)->get();
+            } else {
+                $categorias = Categoria::all();
+            }
 
-        //comentario
+            return response()->json([
+                'status' => 200,
+                'mensagem' => 'Lista de categorias retornada',
+                "categorias" => CategoriaResource::collection($categorias)
+            ], 200);
+        }
     }
 
     /**
@@ -38,7 +48,7 @@ class CategoriaController extends Controller
     public function store(StoreCategoriaRequest $request)
     {
         // Cria o objeto 
-        $categoria =new Categoria();
+        $categoria = new Categoria();
 
         // Transfere os valores
         $categoria->nomedacategoria = $request->nome_da_categoria;
@@ -47,7 +57,7 @@ class CategoriaController extends Controller
         $categoria->save();
 
         // Retorna o resultado
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Categoria criada',
             'categoria' => new CategoriaResource($categoria)
@@ -64,13 +74,13 @@ class CategoriaController extends Controller
     {
         $categoria = Categoria::find($categoria->pkcategoria);
 
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Categoria retornada',
             'categoria' => new CategoriaResource($categoria)
         ]);
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -84,7 +94,7 @@ class CategoriaController extends Controller
         $categoria->nomedacategoria = $request->nome_da_categoria;
         $categoria->update();
 
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Categoria atualizada'
         ], 200);
@@ -100,7 +110,7 @@ class CategoriaController extends Controller
     {
         $categoria->delete();
 
-        return response() -> json([
+        return response()->json([
             'status' => 200,
             'mensagem' => 'Categoria apagada'
         ], 200);
