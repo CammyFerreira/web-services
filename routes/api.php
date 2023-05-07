@@ -20,9 +20,10 @@ use App\Http\Controllers\Api\ItemdopedidoController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware("localization")->group(function () {
+    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+        return $request->user();
+    });
 
 // Rota para categorias
 route::apiResource('categorias', CategoriaController::class);
@@ -41,3 +42,5 @@ route::apiResource('clientes.pedidos', PedidoController::class)->shallow();
 
 // Rota para os produtos
 route::apiResource('pedidos.itensdopedido', ItemdopedidoController::class);
+
+});

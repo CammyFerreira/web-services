@@ -18,6 +18,7 @@ class ProdutoResource extends JsonResource
             'id' => $this->pkproduto,
             'nome_do_produto' => $this->nomedoproduto,
             'preco_de_lista' => $this->precodelista,
+            'moeda' => 'USD',
             'categoria' => [
                 'id' => $this->categoria->pkcategoria,
                 'nome_da_categoria' => $this->categoria->nomedacategoria

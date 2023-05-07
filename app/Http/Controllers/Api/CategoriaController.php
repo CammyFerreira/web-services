@@ -36,7 +36,7 @@ class CategoriaController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'mensagem' => 'Lista de categorias retornada',
+                'mensagem' => __("categoria.listreturn"),
                 "categorias" => CategoriaResource::collection($categorias)
             ], 200);
         }
@@ -62,7 +62,7 @@ class CategoriaController extends Controller
         // Retorna o resultado
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Categoria criada',
+            'mensagem' => __("categoria.created"),
             'categoria' => new CategoriaResource($categoria)
         ], 200);
     }
@@ -88,7 +88,7 @@ class CategoriaController extends Controller
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Categoria retornada',
+            'mensagem' => __("categoria.returned"),
             'categoria' => new CategoriaResource($categoria)
             ]);
         }catch(\Exception $ex) {
@@ -133,7 +133,7 @@ class CategoriaController extends Controller
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Categoria atualizada'
+            'mensagem' => __("categoria.updated")
         ], 200);
     }
 
@@ -149,7 +149,7 @@ class CategoriaController extends Controller
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Categoria apagada'
+            'mensagem' => __("categoria.deleted")
         ], 200);
     }
 }
