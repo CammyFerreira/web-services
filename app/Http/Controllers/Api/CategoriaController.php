@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoriaRequest;
 use App\Http\Resources\CategoriaResource;
 use App\Models\Categoria;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Validator;
 
 class CategoriaController extends Controller
 {
@@ -70,17 +73,51 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function show(Categoria $categoria)
+    public function show($categoriaid)
     {
-        $categoria = Categoria::find($categoria->pkcategoria);
+        try{
+            $validator = Validator::make(['id' => $categoriaid],
+            [
+                'id' => 'interger'
+            ]);
+
+            if($validator->fails()) {
+                throw ValidationException::withMessages(['id' => 'O campo Id deve ser número']);
+            }
+        $categoria = Categoria::findorFail($categoriaid);
 
         return response()->json([
             'status' => 200,
             'mensagem' => 'Categoria retornada',
             'categoria' => new CategoriaResource($categoria)
-        ]);
+            ]);
+        }catch(\Exception $ex) {
+            $class = get_class($ex);
+            switch($class) {
+                case ModelNotFoundException::class:
+                    return response() -> json([
+                        'status' => 404,
+                        'mensagem' =>  'Categoria não encontrada',
+                        'categoria' => []
+                    ], 404);
+                break;
+                case ValidationException::class:
+                    return response() -> json([
+                        'status' => 406,
+                        'mensagem' =>  $ex->getMessage(),
+                        'categoria' => []
+                    ], 406);
+                break;
+                default: 
+                    return response() -> json([
+                        'status' => 500,
+                        'mensagem' =>  'Erro interno',
+                        'categoria' => []
+                    ], 500);
+                    break;
+            }
+        }
     }
-
     /**
      * Update the specified resource in storage.
      *
