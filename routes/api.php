@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\PedidoController;
 use App\Http\Controllers\Api\ProdutoController;
 use App\Http\Controllers\Api\ItemdopedidoController;
+use App\Http\Controllers\Api\PassportAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,13 @@ use App\Http\Controllers\Api\ItemdopedidoController;
 |
 */
 
-Route::middleware("localization")->group(function () {
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::post('register', [PassportAuthController::class, 'register']);
+Route::post('login', [PassportAuthController::class, 'login']);
+Route::post('logout', [PassportAuthController::class, 'logout'])->middleware('auth:api');
+Route::get('user', [PassportAuthController::class, 'userInfo'])->middleware('auth:api');
 
 // Rota para categorias
-route::apiResource('categorias', CategoriaController::class);
+route::apiResource('categorias', CategoriaController::class)->middleware('auth:api');
 
 // Rota para marcas
 route::apiResource('marcas', MarcaController::class);
@@ -42,5 +43,3 @@ route::apiResource('clientes.pedidos', PedidoController::class)->shallow();
 
 // Rota para os produtos
 route::apiResource('pedidos.itensdopedido', ItemdopedidoController::class);
-
-});
