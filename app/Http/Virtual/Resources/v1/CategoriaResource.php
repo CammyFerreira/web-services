@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MarcaResource extends JsonResource
+class CategoriaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,12 @@ class MarcaResource extends JsonResource
      */
     public function toArray($request)
     {
+        // Mantido para documentação
+        // return parent::toArray($request);
+
         return [
-            'id' => $this->pkmarca,
-            'nome_da_marca' => $this->nomedamarca
+            'id' => $this->pkcategoria,
+            'nome_da_categoria' => $this->nomedacategoria
         ];
     }
 }

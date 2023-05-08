@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\StoreItemdopedidoRequest;
-use App\Http\Resources\ItemdopedidoResource;
+use App\Http\Requests\v1\StoreItemdopedidoRequest;
+use App\Http\Resources\v1\ItemdopedidoResource;
 use App\Models\Itemdopedido;
 use App\Models\Pedido;
 

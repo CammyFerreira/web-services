@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\StorePedidoRequest;
-use App\Http\Resources\PedidoResource;
+use App\Http\Requests\v1\StorePedidoRequest;
+use App\Http\Resources\v1\PedidoResource;
 use App\Models\Pedido;
 use App\Models\Cliente;
 use App\Models\Itemdopedido;

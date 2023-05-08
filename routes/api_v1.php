@@ -2,12 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\http\Controllers\Api\CategoriaController;
-use App\Http\Controllers\Api\MarcaController;
-use App\Http\Controllers\Api\ClienteController;
-use App\Http\Controllers\Api\PedidoController;
-use App\Http\Controllers\Api\ProdutoController;
-use App\Http\Controllers\Api\ItemdopedidoController;
+use App\http\Controllers\Api\v1\CategoriaController;
+use App\Http\Controllers\Api\v1\MarcaController;
+use App\Http\Controllers\Api\v1\ClienteController;
+use App\Http\Controllers\Api\v1\PedidoController;
+use App\Http\Controllers\Api\v1\ProdutoController;
+use App\Http\Controllers\Api\v1\ItemdopedidoController;
 
 /*
 |--------------------------------------------------------------------------
